@@ -38,8 +38,8 @@ namespace Graphs
 
     public partial class MainWindow : Window
     {
-        System.Windows.Forms.Timer bfs = new System.Windows.Forms.Timer() { Interval = 200 };
-        System.Windows.Forms.Timer dfs = new System.Windows.Forms.Timer() { Interval = 200 };
+        System.Windows.Forms.Timer bfs = new System.Windows.Forms.Timer() { Interval = 500 };
+        System.Windows.Forms.Timer dfs = new System.Windows.Forms.Timer() { Interval = 400 };
         List<Vertix> graph = new List<Vertix>();
         int count = 0, id_checked = -1, colored = -1;
         int[,]  g = new int[100, 100];
@@ -76,6 +76,7 @@ namespace Graphs
                 }
             colored = -1;
             this.v = -1;
+            used = new bool[100];
             Display();
             MessageBox.Show(times > 1 ? "Не зв'язний" : "Зв'язний");
         }
@@ -122,6 +123,7 @@ namespace Graphs
                 }
             colored = -1;
             this.v = -1;
+            used = new bool[100];
             Display();
             MessageBox.Show(times > 1 ? "Не зв'язний" : "Зв'язний");
         }
@@ -133,12 +135,13 @@ namespace Graphs
             if (q.Count != 0)
             {
                 int cur = q.Dequeue();
+                while (used[cur])
+                     cur = q.Dequeue();
                 used[cur] = true;
                 colored = cur;
                 for (int i = 0; i <= count; i++)
                     if (g[i, cur] == 1 && !used[i])
                     {
-                        used[i] = true;
                         q.Enqueue(i);
                     }
                 Display();
@@ -156,13 +159,14 @@ namespace Graphs
             {
                 ++count;
                 int new_id = count;
-                for(int i = 0; i <= count; i++)
-                    if(GetIndexById(i) == -1)
+                for (int i = 0; i <= count; i++)
+                    if (GetIndexById(i) == -1)
                     {
                         new_id = i;
                         break;
                     }
                 graph.Add(new Vertix(new_id.ToString(), new_id, e.GetPosition(canvas)));
+                //Rename();
             }
             else if (action_list.SelectedIndex == 1 && GetIdByPos(e.GetPosition(canvas)) != -1)
             {
@@ -170,6 +174,7 @@ namespace Graphs
                 for (int i = 0; i <= count; i++)
                     g[id, i] = g[i, id] = 0;
                 graph.RemoveAt(GetIndexById(id));
+                //Rename();
             }
             else if (action_list.SelectedIndex == 2 && GetIdByPos(e.GetPosition(canvas)) != -1)
             {
@@ -188,6 +193,7 @@ namespace Graphs
                 }
             }
             else id_checked = -1;
+            Rename();
             Display();
         }
 
@@ -236,6 +242,8 @@ namespace Graphs
             {
                 var b = v.id == id_checked ? 2 : 1;
                 var c = v.id == colored ? Brushes.Yellow : Brushes.White;
+                if (used[v.id] && v.id != colored)
+                    c = Brushes.Gray;
                 var el = new Ellipse() {
                     Width = 50,
                     Height = 50,
@@ -279,6 +287,30 @@ namespace Graphs
                     return true;
                 }
             return false;
+        }
+
+        private bool ExistName(string name)
+        {
+            foreach (var v in graph)
+                if (v.name == name)
+                    return true;
+            return false;
+        }
+
+        private void Rename()
+        {
+            // get new names
+            for (int i = 0; i < graph.Count; i++)
+            {
+                string new_name = graph[i].name;
+                for (int j = 0; j < graph.Count; j++)
+                    if (!ExistName(j.ToString()))
+                    {
+                        new_name = j.ToString();
+                        break;
+                    }
+                graph[i].name = new_name;
+            }
         }
     }
 }
