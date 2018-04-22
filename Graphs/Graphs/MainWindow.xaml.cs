@@ -38,7 +38,7 @@ namespace Graphs
 
     public partial class MainWindow : Window
     {
-        System.Windows.Forms.Timer bfs = new System.Windows.Forms.Timer() { Interval = 500 };
+        System.Windows.Forms.Timer bfs = new System.Windows.Forms.Timer() { Interval = 700 };
         System.Windows.Forms.Timer dfs = new System.Windows.Forms.Timer() { Interval = 400 };
         List<Vertix> graph = new List<Vertix>();
         int count = 0, id_checked = -1, colored = -1;
@@ -135,7 +135,7 @@ namespace Graphs
             if (q.Count != 0)
             {
                 int cur = q.Dequeue();
-                while (used[cur])
+                while (used[cur] && q.Count != 0)
                      cur = q.Dequeue();
                 used[cur] = true;
                 colored = cur;
@@ -166,7 +166,6 @@ namespace Graphs
                         break;
                     }
                 graph.Add(new Vertix(new_id.ToString(), new_id, e.GetPosition(canvas)));
-                //Rename();
             }
             else if (action_list.SelectedIndex == 1 && GetIdByPos(e.GetPosition(canvas)) != -1)
             {
@@ -174,16 +173,18 @@ namespace Graphs
                 for (int i = 0; i <= count; i++)
                     g[id, i] = g[i, id] = 0;
                 graph.RemoveAt(GetIndexById(id));
-                //Rename();
             }
-            else if (action_list.SelectedIndex == 2 && GetIdByPos(e.GetPosition(canvas)) != -1)
+            else if ((action_list.SelectedIndex == 2 || action_list.SelectedIndex == 3) && GetIdByPos(e.GetPosition(canvas)) != -1)
             {
                 if (id_checked != -1)
                 {
                     int temp = GetIdByPos(e.GetPosition(canvas));
                     if (temp != id_checked)
                     {
-                        g[id_checked, temp] = g[temp, id_checked] = 1;
+                        if(action_list.SelectedIndex == 2)
+                            g[id_checked, temp] = g[temp, id_checked] = 1;
+                        else if(action_list.SelectedIndex == 3)
+                            g[id_checked, temp] = g[temp, id_checked] = 0;
                         id_checked = -1;
                     }
                 }

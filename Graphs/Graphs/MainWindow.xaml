@@ -16,13 +16,16 @@
             <ToolBar Style="{DynamicResource MaterialDesignToolBar}">
                 <ListBox SelectedIndex="0" x:Name="action_list">
                     <ListBoxItem>
-                        <md:PackIcon Kind="Plus"/>
+                        <md:PackIcon Kind="Plus" ToolTip="Додати вершину"/>
                     </ListBoxItem>
                     <ListBoxItem>
-                        <md:PackIcon Kind="Close"/>
+                        <md:PackIcon Kind="Close" ToolTip="Видалити вершину"/>
                     </ListBoxItem>
                     <ListBoxItem>
-                        <md:PackIcon Kind="VectorLine"/>
+                        <md:PackIcon Kind="VectorLine" ToolTip="Додати ребро"/>
+                    </ListBoxItem>
+                    <ListBoxItem>
+                        <md:PackIcon Kind="DeleteForever" ToolTip="Видалити ребро"/>
                     </ListBoxItem>
                 </ListBox>
                 <Separator></Separator>
