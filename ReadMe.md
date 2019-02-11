@@ -4,5 +4,5 @@ This is my high school project. It helps you to draw any kind of graphs and chec
 
 <p align="center">
   <img src="./screen.png" alt="Fourier Transform example"
-       width="654" height="450">
+       >
 </p>
